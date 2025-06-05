@@ -1,102 +1,207 @@
-import Image from "next/image";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
+    }
+  }, [status, router]);
+
+  const handleGetStarted = () => {
+    router.push("/auth/signin");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-900">
+                Auth0 Next.js
+              </h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              {status === "loading" ? (
+                <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+              ) : session ? (
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
+                >
+                  Dashboard
+                </button>
+              ) : (
+                <button
+                  onClick={handleGetStarted}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
+                >
+                  Giriş Yap
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
+            <span className="block">Auth0 ile</span>
+            <span className="block text-indigo-600">
+              Güvenli Kimlik Doğrulama
+            </span>
+          </h1>
+          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Next.js 14+, Auth0 OAuth, JWT tabanlı oturum kontrolü ve middleware
+            yetkilendirme sistemi ile modern ve güvenli web uygulaması
+            geliştirme.
+          </p>
+          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+            <div className="rounded-md shadow">
+              <button
+                onClick={handleGetStarted}
+                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+              >
+                Başlayın
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div className="mt-20">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {/* OAuth 2.0 */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mx-auto">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-lg font-medium text-gray-900 text-center">
+                OAuth 2.0
+              </h3>
+              <p className="mt-2 text-base text-gray-500 text-center">
+                Auth0 ile güvenli OAuth 2.0 kimlik doğrulama sistemi
+              </p>
+            </div>
+
+            {/* JWT Token */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white mx-auto">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-lg font-medium text-gray-900 text-center">
+                JWT Token
+              </h3>
+              <p className="mt-2 text-base text-gray-500 text-center">
+                JSON Web Token tabanlı oturum yönetimi ve güvenlik
+              </p>
+            </div>
+
+            {/* Middleware */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-center h-12 w-12 rounded-md bg-purple-500 text-white mx-auto">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-lg font-medium text-gray-900 text-center">
+                Middleware
+              </h3>
+              <p className="mt-2 text-base text-gray-500 text-center">
+                Next.js middleware ile sayfa seviyesinde yetkilendirme
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Tech Stack */}
+        <div className="mt-20">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+            Teknoloji Yığını
+          </h2>
+          <div className="flex flex-wrap justify-center items-center gap-8">
+            <div className="bg-white rounded-lg shadow p-4 flex items-center space-x-3">
+              <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
+                <span className="text-white font-bold text-sm">N</span>
+              </div>
+              <span className="font-medium">Next.js 14+</span>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4 flex items-center space-x-3">
+              <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-sm">A</span>
+              </div>
+              <span className="font-medium">Auth0</span>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4 flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-sm">TS</span>
+              </div>
+              <span className="font-medium">TypeScript</span>
+            </div>
+            <div className="bg-white rounded-lg shadow p-4 flex items-center space-x-3">
+              <div className="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center">
+                <span className="text-white font-bold text-sm">TW</span>
+              </div>
+              <span className="font-medium">TailwindCSS</span>
+            </div>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="bg-white mt-20">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="text-gray-500 text-sm">
+              © 2024 Auth0 Next.js Integration. SOLID prensipleri ve 12Factor
+              App uyumlu.
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );

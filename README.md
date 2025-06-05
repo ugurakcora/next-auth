@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Auth0 Next.js Integration
 
-## Getting Started
+Auth0 ile OAuth + JWT entegrasyonu ve Next.js Middleware yetkilendirme sistemi. SOLID prensipleri ve 12Factor App ilkelerine uygun olarak geliştirilmiştir.
 
-First, run the development server:
+## 🚀 Özellikler
+
+- **Auth0 OAuth 2.0** entegrasyonu
+- **JWT tabanlı** oturum yönetimi
+- **Next.js 14+ App Router** desteği
+- **Middleware** ile sayfa seviyesinde yetkilendirme
+- **Rol bazlı erişim kontrolü** (admin/user)
+- **TypeScript** desteği
+- **TailwindCSS** ile modern UI
+- **SOLID prensipleri** uyumlu kod yapısı
+- **12Factor App** uyumlu konfigürasyon
+
+## 🛠️ Teknoloji Yığını
+
+- **Next.js 14+** - React framework
+- **Auth0** - OAuth provider
+- **NextAuth.js** - Authentication library
+- **TypeScript** - Type safety
+- **TailwindCSS** - Styling
+- **JWT** - Token-based authentication
+
+## 📋 Gereksinimler
+
+- Node.js 18+
+- npm veya yarn
+- Auth0 hesabı
+
+## ⚙️ Kurulum
+
+### 1. Repository'yi klonlayın
+
+```bash
+git clone <repository-url>
+cd next-auth
+```
+
+### 2. Bağımlılıkları yükleyin
+
+```bash
+npm install
+```
+
+### 3. Environment variables'ları ayarlayın
+
+.env.local dosyası oluşturun:
+
+```env
+# Auth0 Configuration
+AUTH0_SECRET='your-auth0-secret-key-here'
+AUTH0_BASE_URL='http://localhost:3000'
+AUTH0_ISSUER_BASE_URL='https://your-domain.auth0.com'
+AUTH0_CLIENT_ID='your-auth0-client-id'
+AUTH0_CLIENT_SECRET='your-auth0-client-secret'
+
+# NextAuth Configuration
+NEXTAUTH_URL='http://localhost:3000'
+NEXTAUTH_SECRET='your-nextauth-secret-key-here'
+
+# Environment
+NODE_ENV='development'
+```
+
+### 4. Auth0 Konfigürasyonu
+
+1. [Auth0 Dashboard](https://manage.auth0.com/)'a gidin
+2. Yeni bir Application oluşturun (Single Page Application)
+3. Allowed Callback URLs: `http://localhost:3000/api/auth/callback/auth0`
+4. Allowed Logout URLs: `http://localhost:3000`
+5. Allowed Web Origins: `http://localhost:3000`
+
+### 5. Auth0 Actions Kurulumu
+
+1. **Actions** → **Triggers** → **post-login**
+2. **"Build Custom"** ile yeni action oluşturun
+3. Role management kodu ekleyin
+4. Deploy edin ve aktifleştirin
+
+### 6. Uygulamayı çalıştırın
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Proje Yapısı
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── api/auth/[...nextauth]/     # NextAuth API routes
+│   ├── auth/                       # Authentication pages
+│   │   ├── signin/                 # Login page
+│   │   └── unauthorized/           # Unauthorized access page
+│   ├── dashboard/                  # Protected dashboard
+│   ├── admin/                      # Admin panel (admin only)
+│   ├── layout.tsx                  # Root layout with SessionProvider
+│   └── page.tsx                    # Home page
+├── components/
+│   └── providers.tsx              # Session provider wrapper
+├── lib/
+│   ├── auth.ts                     # Authentication utilities
+│   └── env.ts                      # Environment validation
+├── types/
+│   └── next-auth.d.ts             # NextAuth type extensions
+└── middleware.ts                   # Route protection middleware
+```
 
-## Learn More
+## 🔐 Yetkilendirme Sistemi
 
-To learn more about Next.js, take a look at the following resources:
+### Middleware Koruması
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/dashboard/*` - Authenticated users
+- `/admin/*` - Admin role only
+- `/profile/*` - Authenticated users
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Rol Sistemi
 
-## Deploy on Vercel
+- **user**: Standard user permissions
+- **admin**: Administrator permissions (full access)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Vercel
+
+1. Vercel'e deploy edin
+2. Environment variables'ları ekleyin
+3. Auth0 callback URL'lerini güncelleyin
+
+### Docker
+
+```bash
+docker-compose up --build
+```
+
+## 📝 Git Workflow
+
+### Branch Yapısı
+
+- `main`: Production branch
+- `dev/v1.0.0`: Development branch
+- `prod/v1.0.0`: Production release branch
+
+## 🔧 Geliştirme
+
+### Yeni Rol Ekleme
+
+1. Auth0 Dashboard'da yeni rol oluşturun
+2. Auth0 Actions'da role mapping güncelleyin
+3. Middleware'de yeni rol kontrollerini ekleyin
+
+### Yeni Korumalı Sayfa Ekleme
+
+1. Sayfa komponenti oluşturun
+2. `middleware.ts` dosyasında path'i ekleyin
+3. Gerekirse `requireAuth` fonksiyonunu kullanın
+
+## 📄 Lisans
+
+MIT License
+
+---
+
+**Production kullanımı için ek güvenlik önlemleri alınması önerilir.**
