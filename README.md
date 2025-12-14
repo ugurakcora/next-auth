@@ -34,7 +34,7 @@ Auth0 ile OAuth + JWT entegrasyonu ve Next.js Middleware yetkilendirme sistemi. 
 ### 1. Repository'yi klonlayın
 
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/ugurakcora/next-auth)
 cd next-auth
 ```
 
